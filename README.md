@@ -41,10 +41,19 @@ public/images/    # imagens originais baixadas, organizadas por unidade
 docs/             # spec de design
 ```
 
+## Motor de reservas
+
+Motor de reservas próprio (front-end completo), substituindo o Cloudbeds.
+
+- **Hóspede:** `/hotel-stefano/reservas` — wizard de 4 passos (busca de datas → disponibilidade → dados → confirmação com código).
+- **Admin:** `/admin` — login demo **`admin` / `stefano`**; gerencia reservas (status), quartos (CRUD) e disponibilidade/tarifas (calendário com bloqueios e preços por dia).
+- **Dados:** mockados e persistidos em `localStorage` (namespace `stefano.booking.*`). Toda a UI consome a camada `src/lib/booking/api.ts` — o **único ponto** a ser trocado por Supabase depois, sem alterar telas.
+- **Testes:** lógica pura (datas, disponibilidade, preço, código) coberta por Vitest — `npm test`.
+
 ## Observações
 
 - Os formulários de contato usam `mailto:` (não há backend).
-- As reservas do hotel apontam para o motor original (Cloudbeds).
+- O motor de reservas usa dados mockados (localStorage); o pagamento é "na chegada" (sem gateway na v1). O link do Cloudbeds permanece como fallback via WhatsApp.
 - Algumas fotos de galeria do site original são carregadas dinamicamente (Elementor) e não estavam expostas no HTML; nesses casos foram usadas as imagens originais disponíveis das demais páginas.
 
 ---
