@@ -1,16 +1,25 @@
-const KEY = "stefano.booking.admin";
+import { supabase } from "../supabase/client";
 
-export function isLogged(): boolean {
-  if (typeof window === "undefined") return false;
-  return window.localStorage.getItem(KEY) === "1";
+export async function login(email: string, senha: string): Promise<boolean> {
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password: senha,
+  });
+  return !error;
 }
 
-export function login(user: string, pass: string): boolean {
-  const ok = user === "admin" && pass === "stefano";
-  if (ok && typeof window !== "undefined") window.localStorage.setItem(KEY, "1");
-  return ok;
+export async function logout(): Promise<void> {
+  await supabase.auth.signOut();
 }
 
-export function logout(): void {
-  if (typeof window !== "undefined") window.localStorage.removeItem(KEY);
+export async function getSession(): Promise<boolean> {
+  const { data } = await supabase.auth.getSession();
+  return !!data.session;
+}
+
+export function onAuthChange(cb: (logged: boolean) => void): () => void {
+  const { data } = supabase.auth.onAuthStateChange((_e, session) =>
+    cb(!!session),
+  );
+  return () => data.subscription.unsubscribe();
 }

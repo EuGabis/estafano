@@ -9,10 +9,15 @@ export default function AdminLogin() {
   const [user, setUser] = useState("");
   const [pass, setPass] = useState("");
   const [erro, setErro] = useState("");
+  const [carregando, setCarregando] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(user, pass)) router.replace("/admin/reservas");
+    setErro("");
+    setCarregando(true);
+    const ok = await login(user, pass);
+    setCarregando(false);
+    if (ok) router.replace("/admin/reservas");
     else setErro("Credenciais inválidas.");
   };
 
@@ -24,13 +29,14 @@ export default function AdminLogin() {
       >
         <h1 className="font-serif text-2xl text-bordo">Painel Stefano</h1>
         <p className="mt-1 text-xs text-carvao/60">
-          Acesso restrito. (demo: admin / stefano)
+          Acesso restrito à equipe.
         </p>
         <label className="mt-6 block">
           <span className="mb-1 block text-xs font-semibold uppercase tracking-wider2 text-bordo">
-            Usuário
+            E-mail
           </span>
           <input
+            type="email"
             value={user}
             onChange={(e) => setUser(e.target.value)}
             className="w-full rounded-sm border border-carvao/20 px-4 py-2.5 text-sm outline-none focus:border-dourado"
@@ -50,9 +56,10 @@ export default function AdminLogin() {
         {erro && <p className="mt-3 text-sm text-bordo">{erro}</p>}
         <button
           type="submit"
-          className="mt-6 w-full rounded-sm bg-bordo px-6 py-3 text-xs font-semibold uppercase tracking-wider2 text-creme hover:bg-bordo-light"
+          disabled={carregando}
+          className="mt-6 w-full rounded-sm bg-bordo px-6 py-3 text-xs font-semibold uppercase tracking-wider2 text-creme hover:bg-bordo-light disabled:opacity-60"
         >
-          Entrar
+          {carregando ? "Entrando..." : "Entrar"}
         </button>
       </form>
     </div>
