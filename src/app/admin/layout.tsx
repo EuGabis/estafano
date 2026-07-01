@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isLogged, logout } from "@/lib/booking/admin-auth";
+import { getSession, logout } from "@/lib/booking/admin-auth";
 
 const nav = [
   { href: "/admin/reservas", label: "Reservas" },
@@ -21,8 +21,19 @@ export default function AdminLayout({
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (pathname !== "/admin/login" && !isLogged()) router.replace("/admin/login");
-    else setReady(true);
+    if (pathname === "/admin/login") {
+      setReady(true);
+      return;
+    }
+    let active = true;
+    getSession().then((logged) => {
+      if (!active) return;
+      if (!logged) router.replace("/admin/login");
+      else setReady(true);
+    });
+    return () => {
+      active = false;
+    };
   }, [pathname, router]);
 
   if (pathname === "/admin/login")
@@ -54,8 +65,8 @@ export default function AdminLayout({
           ))}
         </nav>
         <button
-          onClick={() => {
-            logout();
+          onClick={async () => {
+            await logout();
             router.replace("/admin/login");
           }}
           className="m-4 rounded-sm border border-creme/20 px-4 py-2 text-xs uppercase tracking-wider2 text-creme/80 hover:bg-creme/10"
