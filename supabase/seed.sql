@@ -1,0 +1,20 @@
+insert into room_types (nome, slug, descricao, capacidade, tamanho_m2, amenidades, fotos, preco_base) values
+('Suíte Deluxe','suite-deluxe',
+ 'Conforto e tranquilidade com cama Queen Size, varanda e vista para a natureza.',
+ 2,20,
+ array['Cama Queen Size','TV 32" com canais pagos','Varanda','Secador','Wi-Fi','Frigobar','Ar condicionado'],
+ array['/images/hotel/deluxe-1.png','/images/hotel/deluxe-2.png','/images/hotel/deluxe-3.png'],
+ 420),
+('Suíte Deluxe Família','suite-deluxe-familia',
+ 'Espaço para toda a família, com cama Queen Size e acomodação para até 4 pessoas.',
+ 4,23,
+ array['Cama Queen Size','TV 32" com canais pagos','Wi-Fi','Secador','Frigobar','Ar condicionado'],
+ array['/images/hotel/familia-1.png','/images/hotel/familia-2.png'],
+ 560),
+('Suíte Standard','suite-standard',
+ 'Aconchego com cama de casal padrão, ideal para uma estadia prática e confortável.',
+ 3,20,
+ array['Cama casal padrão','TV 32"','Wi-Fi','Secador'],
+ array['/images/hotel/standard-1.png','/images/hotel/banheiro-1.png'],
+ 320)
+on conflict (slug) do nothing;
